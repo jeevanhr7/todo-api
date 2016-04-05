@@ -4,22 +4,12 @@
 var express=require('express');
 var app=express();
 var PORT=process.env.PORT||3000;
-var todos=[{
-    id:1,
-    descrption:'I need Job',
-    completed:false
-},
-    {
-        id:2,
-        description:'going to Upload the Resume',
-        completed:false
-    },
-    {
-        id:3,
-        description:'Third Data',
-        completed:false
-    }];
+var todos=[];
+var todoNextId=1;
+var body_parser=require('body-parser');
 
+
+app.use(body_parser.json());
 app.get('/',function(req,res,next){
     res.send('Todod api Found');
 });
@@ -47,6 +37,18 @@ matchedtodo=todo;
    // res.send('Asking for todo Id'+ req.params.id);
 
 });
+//Post/todos/:id
+app.post('/todos',function (req,res) {
+var body=req.body;
+
+    body.id=todoNextId++;
+    todos.push(body);
+  //  console.log('description'+body.description);
+    res.json(body);
+
+});
+
+
 
 
 app.listen(PORT,function(){
