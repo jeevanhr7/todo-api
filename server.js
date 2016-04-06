@@ -13,7 +13,25 @@ app.get('/', function (req, res, next) {
     res.send('Todod api Found');
 });
 app.get('/todos', function (req, res, next) {
-    res.json(todos);
+    var queryparams=req.query;
+   // if(queryparams.completed==='true')
+   // {
+   //  console.log(queryparams);
+   // }
+  var filteredTodos=todos;
+    if (queryparams.hasOwnProperty('completed')  && queryparams.completed==='true') {
+        filteredTodos=_.where(filteredTodos, {completed: true});
+        res.json(filteredTodos);
+    }
+    else if(queryparams.hasOwnProperty('completed')  && queryparams.completed==='false') {
+        filteredTodos=_.where(filteredTodos, {completed: false});
+        res.json(filteredTodos);
+    }
+    else
+    {
+        res.json(todos);
+    }
+
 });
 
 
@@ -86,6 +104,11 @@ app.put('/todos/:id', function (req, res) {
     _.extend(matchedTodo, validAttributes);
     res.json(matchedTodo);
 });
+
+
+
+
+
 
 
 app.listen(PORT, function () {
