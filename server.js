@@ -39,14 +39,25 @@ app.get('/todos', function (req, res, next) {
 
 app.get('/todos/:id', function (req, res, next) {
     var todoid = parseInt(req.params.id, 10);
-    var matchedtodo = _.findWhere(todos, {id: todoid});
-    if (matchedtodo) {
-        res.json(matchedtodo);
-    }
-    else {
-        res.status(404).send();
-    }
-    // res.send('Asking for todo Id'+ req.params.id);
+    db.todo.findById(todoid).then(function (todo) {
+        if(!!todo){
+            //console.log(todo)
+            res.json(todo.toJSON)
+        }
+        else {
+            res.status(404).send();
+        }
+    },function (e) {
+        res.status(500).send();
+    })
+    // var matchedtodo = _.findWhere(todos, {id: todoid});
+    // if (matchedtodo) {
+    //     res.json(matchedtodo);
+    // }
+    // else {
+    //     res.status(404).send();
+    // }
+    // // res.send('Asking for todo Id'+ req.params.id);
 
 });
 
@@ -73,26 +84,16 @@ res.status(400).json(e);
 //Delete Ids from the array
 app.delete('/todos/:id', function (req, res, next) {
     var todoid = parseInt(req.params.id, 10);
-    db.todo.findById(todoId).then(function () {
-        if(!!todo){
-            res.json(todo.toJSON())
-        }
-        else {
-            res.status(404).send();
-        }
-    },function (e) {
-res.status(500).send();
-    });
-    // var matchedtodo = _.findWhere(todos, {id: todoid});
-    //
-    // // res.send('Asking for todo Id'+ req.params.id);
-    // if (matchedtodo) {
-    //     todos = _.without(todos, matchedtodo);
-    //     res.json(matchedtodo);
-    // }
-    // else {
-    //     res.status(404).send();
-    // }
+    var matchedtodo = _.findWhere(todos, {id: todoid});
+
+    // res.send('Asking for todo Id'+ req.params.id);
+    if (matchedtodo) {
+        todos = _.without(todos, matchedtodo);
+        res.json(matchedtodo);
+    }
+    else {
+        res.status(404).send();
+    }
 
 });
 
