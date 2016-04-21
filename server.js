@@ -42,7 +42,7 @@ app.get('/todos/:id', function (req, res, next) {
     db.todo.findById(todoid).then(function (todo) {
         if(!!todo){
             //console.log(todo)
-            res.json(todo.toJSON)
+            res.json(todo.toJSON());
         }
         else {
             res.status(404).send();
